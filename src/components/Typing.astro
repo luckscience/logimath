@@ -1,0 +1,154 @@
+---
+type Segment = {
+  text: string;
+  class?: string;
+};
+
+const {
+  text = "",
+  segments = null,
+  duration = 2,
+  delay = 0,
+  color = "inherit",
+  class: className = "",
+} = Astro.props;
+
+// Unificamos contenido
+const content = segments ? segments.map((s: Segment) => s.text).join("") : text;
+
+// Velocidad por letra
+const speed = Math.max((duration * 1000) / (content.length || 1), 20);
+---
+
+<span
+  class={`typing inline-flex items-center font-mono ${className}`}
+  style={`color: ${color};`}
+  data-speed={speed}
+  data-delay={delay * 1000}
+  data-text={content}
+  data-segments={segments ? JSON.stringify(segments) : ""}
+>
+  <span class="text"></span>
+  <span class="cursor ml-1">|</span>
+</span>
+
+<style>
+  .cursor {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script type="module">
+  document.addEventListener("DOMContentLoaded", () => {
+    /** @type {NodeListOf<HTMLElement>} */
+    const elements = document.querySelectorAll(".typing");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          /** @type {HTMLElement} */
+          const el = entry.target;
+
+          if (el.dataset.animated === "true") return;
+          el.dataset.animated = "true";
+
+          /** @type {HTMLElement | null} */
+          const textEl = el.querySelector(".text");
+
+          if (!textEl) return;
+
+          const fullText = el.dataset.text || "";
+          const speed = parseFloat(el.dataset.speed || "50");
+          const delay = parseFloat(el.dataset.delay || "0");
+          const segmentsData = el.dataset.segments;
+
+          let segments;
+
+          if (segmentsData) {
+            try {
+              segments = JSON.parse(segmentsData);
+            } catch {
+              segments = [{ text: fullText, class: "" }];
+            }
+          } else {
+            segments = [{ text: fullText, class: "" }];
+          }
+
+          let segIndex = 0;
+          let charIndex = 0;
+
+          setTimeout(() => {
+            const interval = setInterval(() => {
+              if (segIndex >= segments.length) {
+                clearInterval(interval);
+                return;
+              }
+
+              const segment = segments[segIndex];
+
+              if (!textEl.lastChild || textEl.lastChild.nodeType !== 1) {
+                const span = document.createElement("span");
+                span.className = segment.class || "";
+                textEl.appendChild(span);
+              }
+
+              const currentSpan = textEl.lastChild;
+
+              currentSpan.textContent += segment.text[charIndex];
+              charIndex++;
+
+              if (charIndex >= segment.text.length) {
+                segIndex++;
+                charIndex = 0;
+
+                if (segIndex < segments.length) {
+                  const nextSpan = document.createElement("span");
+                  nextSpan.className = segments[segIndex].class || "";
+                  textEl.appendChild(nextSpan);
+                }
+              }
+            }, speed);
+          }, delay);
+
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.5 },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+  });
+</script>
+
+<!--
+Sintaxis de uso:
+  Sintaxis básica:
+  <TypingTerminal text="Hola mundo" />
+
+  Sintaxis compleja:
+  <Typing 
+    text="Texto completo a mostrar" 
+    duration={2} // Duración total en segundos
+    delay={0} // Retardo antes de iniciar en segundos
+    color="#fff" // Color del texto
+    class="clases-css-adicionales" // Clases CSS adicionales
+  />
+
+  Sintaxis con segmentos:
+  <TypingTerminal 
+    segments={[
+      { text: "> ", class: "text-gray-500" },
+      { text: "npm run dev", class: "text-green-500 font-semibold" }
+    ]}
+    duration={3}
+    class="text-3xl"
+  />
+-->

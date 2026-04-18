@@ -1,0 +1,39 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+---
+
+<Layout>
+  <Header 
+  segments={[
+    { 
+      text: "Inicio", 
+      route: "/#home", 
+      color: "#F4E13A",
+      fontWeight: "700"
+    },
+    { 
+      text: "Blog", 
+      route: "/blog", 
+      fontSize: "20px" 
+    },
+    { 
+      text: "Docs", 
+      route: "/docs", 
+      class: "uppercase tracking-wide" 
+    }
+  ]}
+  rightSegments={[
+    { 
+      text: "Login", 
+      route: "/login",
+      color: "#00ffcc"
+    }
+  ]}
+/>
+
+  <main
+    class="snap-y snap-mandatory relative w-full h-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-[#070F33]"
+  >
+  </main>
+</Layout>

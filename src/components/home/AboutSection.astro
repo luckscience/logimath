@@ -1,0 +1,76 @@
+---
+import Typing from "../Typing.astro";
+import ShapeSymbols from "../ShapeSymbols.astro"
+
+type Card = {
+  icon: string;
+  title: string;
+  desc: string;
+};
+
+interface Props {
+  cardsContent?: Card[];
+}
+
+const {
+  cardsContent = [
+    {
+      icon: "🧩",
+      title: "Problemas creativos",
+      desc: "Desafios diseñados para resolverse de multiples formas. Explota tu creatividad y genera tu propia solución.",
+    },
+    {
+      icon: "💡",
+      title: "Soluciones guiadas",
+      desc: "¿Atascado? Descubre el procedimiento paso a paso a tu propio ritmo. Aprende comprendiendo, no copiando.",
+    },
+    {
+      icon: "📈",
+      title: "Desarrolla tu pensamiento lógico",
+      desc: "Cada problema es una oportunidad para probar tu capacidad de razonar de forma distinta. Mejora tu habilidad para crear soluciones creativas con cada desafio.",
+    },
+  ],
+} = Astro.props as Props;
+---
+
+<section
+  class="about-section h-screen w-screen text-center overflow-hidden relative items-center gray-blue grid-pattern"
+  id="about"
+>
+  <div class="z-30">
+    <ShapeSymbols />
+  </div>
+
+  <div class="relative flex text-center">
+    <div
+      class="flex flex-col gap-6 items-center justify-center w-332.5 h-screen pl-38.75"
+    >
+
+      <Typing
+        segments={[
+          { text: "¿Por qué  ", class: "text-gray-300" },
+          { text: "LogiMath", class: "text-[#F4E13A] font-semibold" },
+          { text: "?", class: "text-gray-300"}
+        ]}
+        duration={1.6}
+        delay={0}
+        class="text-5xl font-heading font-bold text-white pb-17.5"
+        color=""
+      />
+
+      <div class="grid md:grid-cols-3 gap-8">
+        {
+          cardsContent.map((f, i) => (
+            <div
+              class={`bg-[#0c132d] text-white border border-gray-700 p-8 rounded hover:border-[#F4E13A] hover:drop-shadow-[0_0_8px_rgba(251,146,60,0.8)] transition-colors duration-300`}
+            >
+              <span class="text-4xl mb-4 block">{f.icon}</span>
+              <h3 class="font-heading text-xl font-bold mb-3">{f.title}</h3>
+              <p class="font-body text-gray-400 leading-relaxed">{f.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

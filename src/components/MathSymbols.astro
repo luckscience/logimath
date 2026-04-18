@@ -1,0 +1,56 @@
+---
+type SymbolItem = {
+  char: string;
+  top?: string;
+  left?: string;
+  right?: string;
+  delay: string;
+  size: string;
+};
+
+interface Props {
+  symbols?: SymbolItem[];
+}
+
+const {
+  symbols = [
+    { char: "∑", top: "10%", left: "5%", delay: "0s", size: "4rem" },
+    { char: "π", top: "20%", right: "8%", delay: "1s", size: "3.5rem" },
+    { char: "∞", top: "60%", left: "10%", delay: "2s", size: "3rem" },
+    { char: "√", top: "70%", right: "12%", delay: "0.5s", size: "3.5rem" },
+    { char: "∫", top: "40%", left: "85%", delay: "1.5s", size: "4rem" },
+    { char: "Δ", top: "80%", left: "50%", delay: "2.5s", size: "3rem" },
+    { char: "≠", top: "15%", left: "45%", delay: "3s", size: "2.5rem" },
+    { char: "∂", top: "50%", right: "25%", delay: "1.8s", size: "3rem" },
+  ],
+}: Props = Astro.props;
+---
+
+{
+  symbols.map((s: SymbolItem, i: number) => (
+    <span
+      class="math-symbol absolute text-white opacity-20"
+      style={`
+      top: ${s.top ?? "auto"};
+      left: ${s.left ?? "auto"};
+      right: ${s.right ?? "auto"};
+      font-size: ${s.size};
+      animation: float 6s ease-in-out ${s.delay} infinite;
+    `}
+    >
+      {s.char}
+    </span>
+  ))
+}
+
+<style>
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-17px);
+    }
+  }
+</style>

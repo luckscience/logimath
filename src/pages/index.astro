@@ -1,11 +1,58 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import WelcomeSection from "../components/home/HeroSection.astro";
+import AboutSection from "../components/home/AboutSection.astro";
+import InfoSection from "../components/home/InfoSection.astro";
+import Footer from "../components/Footer.astro";
 ---
 
 <Layout>
-	<Welcome />
+  <Header 
+    segments={[
+      { 
+        text: "Inicio", 
+        route: "/#home",
+      },
+      { 
+        text: "Acerca de", 
+        route: "/#about",
+      },
+      {
+        text: "Objetivo",
+        route: "/#info",
+      },
+      /*{ 
+        text: "Contacto", 
+        route: "/#contact", 
+      }*/
+    ]}
+    rightSegments={[
+      { 
+        text: "Login", 
+        route: "/login",
+        color: "#00ffcc",
+        class: "border-2 border-[#00ffcc] px-20 hover:bg-[#00ffcc] hover:text-black transition-all duration-300"
+      }
+    ]}
+  />
+
+  <main
+    class="snap-y snap-mandatory relative w-full h-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-[#070F33] select-none"
+  >
+
+  <div class="snap-center">
+    <WelcomeSection />
+  </div>
+
+  <div class="snap-center">
+    <AboutSection />
+  </div>
+
+  <div class="snap-center">
+    <InfoSection />
+  </div>
+
+  <Footer />
+  </main>
 </Layout>

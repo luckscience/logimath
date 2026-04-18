@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+@import "tailwindcss";
+
+@layer base {
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-body);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+    }
+}
+
+@layer base {
+    :root {
+        --primary: 221 38% 20%;
+
+        --font-heading: "Space Mono", monospace;
+        --font-body: "Lato", sans-serif;
+    }
+}
+
+@layer utilities {
+    .gray-blue {
+        background-color: hsl(var(--primary) / 0.3);
+    }
+
+    .font-heading {
+        font-family: var(--font-heading);
+    }
+
+    .font-body {
+        font-family: var(--font-body);
+    }
+
+    .animate-fade-up {
+        animation: fadeUp 0.6s ease-out both;
+    }
+}
+
+@layer components {
+    .grid-pattern {
+        background-image:
+            linear-gradient(hsl(228 30% 18% / 0.5) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(228 30% 18% / 0.5) 1px, transparent 1px);
+        background-size: 60px 60px;
+    }
+
+    .math-symbol {
+        font-family: var(--font-heading);
+        color: hsl(var(--yellow-glow) / 0.12);
+        position: absolute;
+        font-size: 3rem;
+        user-select: none;
+        pointer-events: none;
+    }
+
+        .shape-symbol {
+        font-family: var(--font-heading);
+        color: hsl(var(--yellow-glow) / 0.12);
+        position: absolute;
+        font-size: 3rem;
+        user-select: none;
+        pointer-events: none;
+    }
+}

@@ -1,0 +1,35 @@
+---
+import MathSymbols from "../MathSymbols.astro";
+---
+
+<section
+  class="landing-section h-screen w-screen text-center grid-pattern overflow-hidden relative items-center"
+  id="home"
+>
+  <div class="z-30">
+    <MathSymbols />
+  </div>
+
+  <div class="relative flex text-center">
+    <div
+      class="flex flex-col gap-6 items-center justify-center w-full h-screen"
+    >
+      <!--Componentes -->
+      <h1 class="font-heading font-bold px-80 text-7xl text-white animate-fade-up">
+        Las Matematicas no son memorización. <span class="text-[#F4E13A]"
+          >Es cuestión de lógica.</span
+        >
+      </h1>
+      <p class="font-body text-xl text-gray-400 max-w-lg">
+        ¡Compruebalo tu mismo!
+      </p>
+
+      <a
+        href="/exercises/example"
+        class="inline-block mt-10 px-8 py-4 bg-[#F4E13A] text-black font-heading font-bold text-lg rounded border-2 border-[#F4E13A] hover:bg-transparent hover:text-[#F4E13A] transition-all duration-300 animate-fade-up-delay-2"
+      >
+        Haz una prueba →
+      </a>
+    </div>
+  </div>
+</section>
