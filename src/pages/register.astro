@@ -1,0 +1,111 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../layouts/Header.astro";
+import Footer from "../layouts/Footer.astro";
+import MathSymbols from "../components/MathSymbols.astro";
+---
+
+<Layout>
+  <Header
+    segments={[
+      {
+        text: "Inicio",
+        route: "/#home",
+      },
+    ]}
+  />
+
+  <main
+    class="relative w-full h-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-[#070F33] select-none"
+  >
+    <div class="snap-center">
+      <section
+        class="h-screen w-screen flex items-center justify-center grid-pattern bg-center relative overflow-hidden"
+      >
+        <div class="absolute inset-0 z-20 backdrop-blur-xs"></div>
+
+        <div class="absolute inset-0 z-10">
+          <MathSymbols />
+        </div>
+
+        <div
+          class="relative z-20 mt-20 w-full flex items-center justify-center"
+        >
+          <form
+            class="w-105 p-13 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_0_30px_20px_rgba(0,0,0,0.1)] text-white flex flex-col items-center"
+          >
+            <h1 class="mb-4 text-2xl font-semibold">Registrarse</h1>
+
+            <!-- Username -->
+            <div class="w-full relative mt-5">
+              <input
+                type="text"
+                name="username"
+                placeholder="Nombre de usuario"
+                class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
+              />
+              <i
+                class="bx bxs-user absolute left-3 top-1/2 -translate-y-1/2 text-white/70 text-lg transition-all duration-300"
+              ></i>
+            </div>
+
+            <!-- Email -->
+            <div class="w-full relative mt-5">
+              <input
+                type="email"
+                name="email"
+                placeholder="Correo electronico"
+                class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="w-full relative mt-5">
+              <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
+              />
+              <i
+                class="bx bxs-lock-alt absolute left-3 top-1/2 -translate-y-1/2 text-white/70 text-lg transition-all duration-300"
+              ></i>
+            </div>
+
+            <!-- Remember / Forgot -->
+            <div class="w-full flex justify-between mt-4 text-sm">
+              <div class="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="remember-me"
+                  class="accent-cyan-400"
+                />
+                <label for="remember-me">Mantener sesión activa</label>
+              </div>
+
+              <a href="#" class="hover:underline">Forgot password</a>
+            </div>
+
+            <!-- Button -->
+            <button
+              type="submit"
+              class="w-full mt-10 py-2 rounded-xl bg-[#2769b4] font-bold text-sm hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-[#32CDD58A] transition-all duration-300"
+            >
+              Completar
+            </button>
+
+            <!-- Login -->
+            <p class="mt-8 text-sm">
+              ¿Ya tienes una cuenta?
+              <a href="/login" class="font-bold">Iniciar sesión</a>
+            </p>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="snap-start">
+    <Footer />
+  </div>
+</Layout>

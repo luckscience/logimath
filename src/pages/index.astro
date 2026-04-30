@@ -1,21 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
+import Header from "../layouts/Header.astro";
 import WelcomeSection from "../components/home/HeroSection.astro";
 import AboutSection from "../components/home/AboutSection.astro";
 import InfoSection from "../components/home/InfoSection.astro";
-import Footer from "../components/Footer.astro";
+import Footer from "../layouts/Footer.astro";
 ---
 
 <Layout>
-  <Header 
+  <Header
     segments={[
-      { 
-        text: "Inicio", 
+      {
+        text: "Inicio",
         route: "/#home",
       },
-      { 
-        text: "Acerca de", 
+      {
+        text: "Acerca de",
         route: "/#about",
       },
       {
@@ -28,31 +28,34 @@ import Footer from "../components/Footer.astro";
       }*/
     ]}
     rightSegments={[
-      { 
-        text: "Login", 
+      {
+        text: "Iniciar sesión",
         route: "/login",
-        color: "#00ffcc",
-        class: "border-2 border-[#00ffcc] px-20 hover:bg-[#00ffcc] hover:text-black transition-all duration-300"
-      }
+        class:
+          "font-bold text-white px-15 mr-6 hover:text-blue-300 transition-all duration-300",
+      },
     ]}
   />
 
   <main
-    class="snap-y snap-mandatory relative w-full h-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-[#070F33] select-none"
+    class="relative w-full h-screen overflow-y-auto overflow-x-hidden scroll-custom bg-[#070F33] select-none"
   >
+    <div class="snap-y snap-mandatory h-full overflow-y-auto scroll-smooth">
+      <div class="snap-center">
+        <WelcomeSection />
+      </div>
 
-  <div class="snap-center">
-    <WelcomeSection />
-  </div>
+      <div class="snap-center">
+        <AboutSection />
+      </div>
 
-  <div class="snap-center">
-    <AboutSection />
-  </div>
+      <div class="snap-center">
+        <InfoSection />
+      </div>
 
-  <div class="snap-center">
-    <InfoSection />
-  </div>
-
-  <Footer />
+      <div class="snap-start">
+        <Footer />
+      </div>
+    </div>
   </main>
 </Layout>

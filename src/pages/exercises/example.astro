@@ -1,39 +1,153 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Header from "../../components/Header.astro";
+import Header from "../../layouts/Header.astro";
+import Footer from "../../layouts/Footer.astro";
+import AnswerInput from "../../components/AnswerInput.astro";
+import SolutionReveal from "../../components/SolutionReveal.astro";
+
+const steps = [
+  {action: "Cruzan A y B juntos", time: "2 min", running: "2 min"},
+  {action: "B regresa con la antorcha", time: "2 min", running: "4 min"},
+  {action: "C y D cruzan juntos", time: "10 min", running: "14 min"},
+  {action: "A regresa con la antorcha", time: "1 min", running: "15 min"},
+  {action: "Finalmente, A y B cruzan juntos", time: "2 min", running: "17 min"},
+]
 ---
 
 <Layout>
-  <Header 
-  segments={[
-    { 
-      text: "Inicio", 
-      route: "/#home", 
-      color: "#F4E13A",
-      fontWeight: "700"
-    },
-    { 
-      text: "Blog", 
-      route: "/blog", 
-      fontSize: "20px" 
-    },
-    { 
-      text: "Docs", 
-      route: "/docs", 
-      class: "uppercase tracking-wide" 
-    }
-  ]}
-  rightSegments={[
-    { 
-      text: "Login", 
-      route: "/login",
-      color: "#00ffcc"
-    }
-  ]}
-/>
+  <Header
+    segments={[
+      {
+        text: "Inicio",
+        route: "/#home",
+        color: "#F4E13A",
+        fontWeight: "700",
+      },
+      {
+        text: "Problema",
+        route: "#problem",
+      },
+      {
+        text: "Solución",
+        route: "#solution",
+      },
+    ]}
+    rightSegments={[
+      {
+        text: "Login",
+        route: "/login",
+        color: "#00ffcc",
+      },
+    ]}
+  />
 
   <main
-    class="snap-y snap-mandatory relative w-full h-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-[#070F33]"
+    class="relative w-full h-screen overflow-y-auto overflow-x-hidden scroll-custom bg-[#070F33] grid-pattern select-none"
   >
+    <div
+      class="snap-y snap-mandatory h-full w-full overflow-y-auto scroll-smooth"
+    >
+      <div class="snap-center">
+        <div class="container mx-auto px-4 max-w-3xl pt-24 pb-16">
+          <!--Etiquetas -->
+          <div class="flex gap-3 mb-4">
+            <span
+              class="font-heading text-xs font-bold px-3 py-1 border border-[#F4E13A] text-[#F4E13A] rounded"
+              >Logica y estrategia</span
+            >
+            <span
+              class="font-heading text-xs font-bold px-3 py-1 border border-gray-400 text-gray-foreground rounded"
+              >Intermedio</span
+            >
+          </div>
+
+          <h1
+            class="font-heading text-3xl md:text-4xl font-bold mb-2 text-white"
+          >
+            El puente y la antorcha
+          </h1>
+
+          <!--Problem Card -->
+          <div
+            class="mt-8 p-6 md:p-8 bg-[#0e1638] border-2 border-gray-400/20 rounded text-white"
+          >
+            <p class="font-body text-lg leading-relaxed mb-6">
+              Cuatro personas necesitan cruzar un puente en la noche. Ellos solo
+              tienen <strong class="text-[#F4E13A]">una antorcha</strong>, y el
+              puente soporta un máximo de <strong class="text-[#F4E13A]"
+                >dos personas</strong
+              > a la vez
+            </p>
+            <p class="font-body text-lg leading-relaxed mb-4">
+              Cada persona camina a una velocidad distinta:
+            </p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+              {
+                [
+                  { name: "Persona A", time: "1 min" },
+                  { name: "Persona B", time: "2 min" },
+                  { name: "Persona C", time: "5 min" },
+                  { name: "Persona D", time: "10 min" },
+                ].map((p) => (
+                  <div
+                    id={p.name}
+                    class="bg-[#171f40] border border-gray-400/20 rounded p-3 text-center"
+                  >
+                    <div class="font-heading text-sm font-bold">{p.name}</div>
+                    <div class="font-heading text-[#F4E13A] text-lg font-bold mt-1">
+                      {p.time}
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <p class="font-body text-lg leading-relaxed mb-2">
+              Cuando dos personas cruzan juntas, avanzan
+              <strong>al ritmo de la persona más lenta.</strong> La antorcha debe
+              ser llevada de vuelta cada vez que se cruza el puente.
+            </p>
+            <p class="font-heading text-xl font-bold text-[#F4E13A] mt-6">
+              ¿Cuál es el tiempo minimo para que todas las personas cruzen el
+              puente?
+            </p>
+          </div>
+
+          <!--Input de resultado y mostrar estado del resultado(correcto / incorrecto) -->
+          <AnswerInput problemResult={17} />
+          <SolutionReveal steps={steps}/>
+
+          <!-- ¿Por qué este problema? -->
+          <div
+            class="mt-16 p-6 bg-[#0b1436] border border-gray-400/20 rounded text-white"
+          >
+            <h2 class="font-heading text-lg font-bold mb-2">
+              ¿Por qué este problema?
+            </h2>
+            <p class="font-body text-gray-foreground leading-relaxed">
+              Este problema clásico entrena el <strong class="text-white"
+                >pensamiento de optimización</strong
+              >. El enfoque intuitivo (enviar de vuelta a la persona más rápida
+              cada vez) no produce la solución óptima. Te obliga a considerar
+              estrategias no obvias, una habilidad clave en matemáticas y en la
+              vida real.
+            </p>
+          </div>
+
+          <div class="mt-12 text-center">
+            <a
+              href="/exercises"
+              class="inline-block px-8 py-4 bg-[#F4E13A] text-black font-heading font-bold rounded border-2 border-[#F4E13A] hover:bg-transparent hover:text-[#F4E13A] transition-all duration-300"
+              >← Ver más problemas</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="snap-start">
+        <Footer />
+      </div>
+    </div>
   </main>
 </Layout>

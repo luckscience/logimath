@@ -1,6 +1,5 @@
 ---
 import Typing from "../Typing.astro";
-import ShapeSymbols from "../ShapeSymbols.astro"
 
 type Card = {
   icon: string;
@@ -34,12 +33,9 @@ const {
 ---
 
 <section
-  class="about-section h-screen w-screen text-center overflow-hidden relative items-center gray-blue grid-pattern"
+  class="about-section h-screen w-screen text-center overflow-hidden relative items-center gray-blue grid-pattern scroll-smooth"
   id="about"
 >
-  <div class="z-30">
-    <ShapeSymbols />
-  </div>
 
   <div class="relative flex text-center">
     <div

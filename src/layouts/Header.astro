@@ -1,5 +1,5 @@
 ---
-import Logo from "./Logo.astro";
+import Logo from "../components/Logo.astro";
 
 type Segment = {
   text: string;
@@ -19,11 +19,11 @@ const {
 
 <header
   id="landing-header"
-  class={`py-3 px-10 flex items-center fixed top-0 w-full justify-between z-40 
+  class={`py-3 px-10 flex items-center fixed top-0 w-full h-20 justify-between z-40 
   bg-background/95 backdrop-blur-md border-b border-blue-950 ${className}`}
 >
   <!-- LOGO -->
-  <div class="flex grow basis-0 gap-4 items-center">
+  <div class="flex grow basis-0 ml-20 gap-4 items-center">
     <a href="/#home"><Logo /></a>
     <h1 class="font-heading font-bold text-[20px] text-white">
       <span class="text-[#F4E13A]">Logi</span>Math
@@ -32,7 +32,7 @@ const {
 
   <!-- NAV CENTRAL DINÁMICO -->
   <nav>
-    <ul class="flex font-body">
+    <ul class="flex -ml-20 font-body">
       {segments.map((item: Segment) => (
         <li>
           <a
@@ -61,10 +61,10 @@ const {
         <li>
           <a
             href={item.route || "#"}
-            class={`px-4 py-2 inline-block ${item.class || ""}`}
+            class={`px-4 py-2 rounded-[5px] inline-block ${item.class || ""}`}
             style={`
               color: ${item.color || "white"};
-              font-size: ${item.fontSize || "14px"};
+              font-size: ${item.fontSize || "17px"};
               font-weight: ${item.fontWeight || "500"};
             `}
           >
@@ -75,44 +75,3 @@ const {
     </ul>
   </nav>
 </header>
-
-<!--
-Caso simple:
-<Header 
-  segments={[
-    { text: "Inicio", route: "/#home" },
-    { text: "Acerca de", route: "/#about" },
-    { text: "Contacto", route: "/#contact" }
-  ]}
-/>
-
-Caso completo:
-<Header 
-  segments={[
-    { 
-      text: "Inicio", 
-      route: "/#home", 
-      color: "#F4E13A",
-      fontWeight: "700"
-    },
-    { 
-      text: "Blog", 
-      route: "/blog", 
-      fontSize: "20px" 
-    },
-    { 
-      text: "Docs", 
-      route: "/docs", 
-      class: "uppercase tracking-wide" 
-    }
-  ]}
-  rightSegments={[
-    { 
-      text: "Login", 
-      route: "/login",
-      color: "#00ffcc"
-    }
-  ]}
-/>
-
--->

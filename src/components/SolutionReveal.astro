@@ -1,0 +1,119 @@
+---
+interface Step {
+  action: string;
+  time: string;
+  running: string;
+}
+
+interface Props {
+  steps: Step[];
+  intervalMs?: number;
+  showText?: string;
+  hideText?: string;
+  resultText?: string;
+}
+
+const {
+  steps,
+  intervalMs = 600,
+  showText = "Mostrar el procedimiento de solución ▼",
+  hideText = "Ocultar procedimiento ▲",
+  resultText = "Tiempo minimo: 17 minutos ✓"
+} = Astro.props;
+---
+
+<div class="solution-reveal mt-8" data-interval={intervalMs}>
+  <button
+    class="toggle-btn font-body text-sm text-gray-foreground underline underline-offset-4 hover:text-black transition-colors"
+    aria-expanded="false"
+  >
+    {showText}
+  </button>
+
+  <div class="steps-container mt-6 space-y-3 hidden">
+    {steps.map((s, i) => (
+      <div class="step flex items-center gap-4 p-4 bg-[#121b3c] border border-gray-foreground rounded transition-all duration-500 opacity-0 translate-y-4">
+        <span class="font-heading text-[#F4E13A] text-sm font-bold min-w-8">
+          {i + 1}.
+        </span>
+        <span class="font-body flex-1">{s.action}</span>
+        <span class="font-heading text-sm text-gray-foreground">
+          +{s.time}
+        </span>
+        <span class="font-heading text-sm text-[#F4E13A] font-bold">
+          = {s.running}
+        </span>
+      </div>
+    ))}
+
+    <div class="final-box mt-4 p-4 bg-[#F4E13A]/15 border-2 border-[#F4E13A] rounded text-center hidden">
+      <span class="font-heading text-xl font-bold text-[#F4E13A]">
+        {resultText}
+      </span>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll(".solution-reveal").forEach(root => {
+    const container = root.querySelector(".steps-container");
+    const btn = root.querySelector(".toggle-btn");
+    const finalBox = root.querySelector(".final-box");
+    const steps = root.querySelectorAll(".step");
+
+    if (!(root instanceof HTMLElement) ||
+        !(container instanceof HTMLElement) ||
+        !(btn instanceof HTMLButtonElement) ||
+        !(finalBox instanceof HTMLElement)) return;
+
+    const intervalMs = Number(root.dataset.interval ?? 600);
+
+    let open = false;
+    let timers: ReturnType<typeof setTimeout>[] = [];
+
+    const reset = () => {
+      steps.forEach(step => {
+        step.classList.add("opacity-0", "translate-y-4");
+        step.classList.remove("opacity-100", "translate-y-0");
+      });
+      finalBox.classList.add("hidden");
+    };
+
+    const revealSteps = () => {
+      steps.forEach((step, i) => {
+        const t = setTimeout(() => {
+          step.classList.remove("opacity-0", "translate-y-4");
+          step.classList.add("opacity-100", "translate-y-0");
+
+          if (i === steps.length - 1) {
+            finalBox.classList.remove("hidden");
+          }
+        }, i * intervalMs);
+
+        timers.push(t);
+      });
+    };
+
+    const clearTimers = () => {
+      timers.forEach(t => clearTimeout(t));
+      timers = [];
+    };
+
+    btn.addEventListener("click", () => {
+      open = !open;
+
+      btn.textContent = open ? "{hideText}" : "{showText}";
+      btn.setAttribute("aria-expanded", String(open));
+
+      clearTimers();
+
+      if (open) {
+        container.classList.remove("hidden");
+        revealSteps();
+      } else {
+        container.classList.add("hidden");
+        reset();
+      }
+    });
+  });
+</script>

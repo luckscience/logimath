@@ -16,3 +16,67 @@ En caso de no poder resolverlo en las 3 oportunidades se te da la opción de rev
  - Landing page informativa sobre el uso de la plataforma.
  - Pagina con un ejercicio de ejemplo.
 
+
+## Sintaxis de componentes
+### Header
+Caso simple:
+<Header 
+  segments={[
+    { text: "Inicio", route: "/#home" },
+    { text: "Acerca de", route: "/#about" },
+    { text: "Contacto", route: "/#contact" }
+  ]}
+/>
+
+Caso completo:
+<Header 
+  segments={[
+    { 
+      text: "Inicio", 
+      route: "/#home", 
+      color: "#F4E13A",
+      fontWeight: "700"
+    },
+    { 
+      text: "Blog", 
+      route: "/blog", 
+      fontSize: "20px" 
+    },
+    { 
+      text: "Docs", 
+      route: "/docs", 
+      class: "uppercase tracking-wide" 
+    }
+  ]}
+  rightSegments={[
+    { 
+      text: "Login", 
+      route: "/login",
+      color: "#00ffcc"
+    }
+  ]}
+/>
+
+### Footer
+Sintaxis de uso:
+  Sintaxis básica:
+  <TypingTerminal text="Hola mundo" />
+
+  Sintaxis compleja:
+  <Typing 
+    text="Texto completo a mostrar" 
+    duration={2} // Duración total en segundos
+    delay={0} // Retardo antes de iniciar en segundos
+    color="#fff" // Color del texto
+    class="clases-css-adicionales" // Clases CSS adicionales
+  />
+
+  Sintaxis con segmentos:
+  <TypingTerminal 
+    segments={[
+      { text: "> ", class: "text-gray-500" },
+      { text: "npm run dev", class: "text-green-500 font-semibold" }
+    ]}
+    duration={3}
+    class="text-3xl"
+  />

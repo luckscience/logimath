@@ -1,0 +1,96 @@
+---
+const { problemResult } = Astro.props;
+---
+
+<div class="mt-8">
+  <label
+    for="answer-input"
+    class="font-heading text-lg font-bold block mb-3 text-white"
+  >
+    Tu respuesta
+    <span class="text-gray-400 font-body text-sm">(en minutos)</span>
+  </label>
+
+  <div class="flex gap-3">
+    <input
+      type="number"
+      id="answer-input"
+      placeholder="?"
+      class="bg-[#1f2646] border border-gray-400/20 rounded px-4 py-3 font-heading text-2xl text-gray-400 w-32 no-spin focus:outline-none focus:border-[#F4E13A]"
+    />
+    <button
+      id="submit-btn"
+      disabled
+      class="px-6 py-3 bg-[#F4E13A] text-black font-heading font-bold rounded border-2 border-[#F4E13A] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-transparent hover:text-[#F4E13A]"
+    >
+      Comprobar respuesta
+    </button>
+  </div>
+
+  <div id="feedback" class="mt-4 hidden"></div>
+</div>
+
+<script define:vars={{ problemResult }}>
+  const correctAnswer = Number(problemResult);
+
+  const input = document.getElementById("answer-input");
+  const button = document.getElementById("submit-btn");
+  const feedback = document.getElementById("feedback");
+
+  // Validación segura de tipos (sin usar "as")
+  if (
+    !(input instanceof HTMLInputElement) ||
+    !(button instanceof HTMLButtonElement) ||
+    !(feedback instanceof HTMLDivElement)
+  ) {
+    return;
+  }
+
+  // Función para controlar el estado del botón
+  const toggleButtonState = () => {
+    const hasValue = input.value.trim() !== "";
+    button.disabled = !hasValue;
+  };
+
+  // Estado inicial (por si acaso)
+  toggleButtonState();
+
+  // Escuchar cambios en el input
+  input.addEventListener("input", toggleButtonState);
+
+  button.addEventListener("click", () => {
+    const value = parseInt(input.value.trim(), 10);
+
+    if (value === correctAnswer) {
+      feedback.className =
+        "mt-4 p-4 border border-green-500/50 bg-green-500/10 rounded transition-all duration-500";
+      feedback.innerHTML = `
+        <p class="font-heading font-bold text-green-400">
+          🎉 ¡Correcto! El resultado es ${correctAnswer}.
+        </p>
+        <p class="text-sm text-gray-400 mt-1">
+          Excelente razonamiento.
+        </p>
+      `;
+    } else if (isNaN(value)) {
+      // Comprobación adicional para manejar casos donde el valor puede no ser un número válido o se usaron herramientas para activar el boton de forma forzada mientras el input esta vacio.
+      feedback.className =
+        "mt-4 p-4 border border-yellow-500/50 bg-yellow-500/10 rounded transition-all duration-500";
+      feedback.innerHTML = `
+        <p class="font-heading font-bold text-yellow-400">
+          ⚠️ ¡Error inesperado! Input vacio, no se puede proceder con la operación. Reiniciar la página e intentar de nuevo
+        </p>
+      `;
+    } else {
+      feedback.className =
+        "mt-4 p-4 border border-red-500/50 bg-red-500/10 rounded transition-all duration-500";
+      feedback.innerHTML = `
+        <p class="font-heading font-bold text-red-400">
+          ❌ No es correcto — intentalo de nuevo. 
+        </p>
+      `;
+    }
+
+    feedback.classList.remove("hidden");
+  });
+</script>
