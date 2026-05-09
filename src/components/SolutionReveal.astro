@@ -1,3 +1,5 @@
+Hacer que el componente sea más flexible y fácil de usar en otros ejercicios, permitiendo personalizar los textos y tiempos sin necesidad de modificar el código interno.
+
 ---
 interface Step {
   action: string;
@@ -20,23 +22,31 @@ const {
   hideText = "Ocultar procedimiento ▲",
   resultText = "Tiempo minimo: 17 minutos ✓"
 } = Astro.props;
+
+const id = `solution-${Math.random().toString(36).slice(2)}`;
 ---
 
-<div class="solution-reveal mt-8" data-interval={intervalMs}>
+<div 
+  class="solution-reveal mt-8"
+  data-interval={intervalMs}
+  data-show-text={showText}
+  data-hide-text={hideText}
+>
   <button
-    class="toggle-btn font-body text-sm text-gray-foreground underline underline-offset-4 hover:text-black transition-colors"
+    class="toggle-btn font-body text-sm text-gray-foreground underline underline-offset-4 hover:text-white transition-colors duration-300"
     aria-expanded="false"
+    aria-controls={id}
   >
     {showText}
   </button>
 
-  <div class="steps-container mt-6 space-y-3 hidden">
+  <div id={id} class="steps-container mt-6 space-y-3 hidden">
     {steps.map((s, i) => (
       <div class="step flex items-center gap-4 p-4 bg-[#121b3c] border border-gray-foreground rounded transition-all duration-500 opacity-0 translate-y-4">
         <span class="font-heading text-[#F4E13A] text-sm font-bold min-w-8">
           {i + 1}.
         </span>
-        <span class="font-body flex-1">{s.action}</span>
+        <span class="font-body text-white flex-1">{s.action}</span>
         <span class="font-heading text-sm text-gray-foreground">
           +{s.time}
         </span>
@@ -46,7 +56,7 @@ const {
       </div>
     ))}
 
-    <div class="final-box mt-4 p-4 bg-[#F4E13A]/15 border-2 border-[#F4E13A] rounded text-center hidden">
+    <div class="final-box mt-4 p-4 bg-[#F4E13A]/15 border-2 border-[#F4E13A] rounded text-center hidden opacity-0 transition-opacity duration-500">
       <span class="font-heading text-xl font-bold text-[#F4E13A]">
         {resultText}
       </span>
@@ -55,65 +65,89 @@ const {
 </div>
 
 <script>
-  document.querySelectorAll(".solution-reveal").forEach(root => {
-    const container = root.querySelector(".steps-container");
-    const btn = root.querySelector(".toggle-btn");
-    const finalBox = root.querySelector(".final-box");
-    const steps = root.querySelectorAll(".step");
+document.querySelectorAll(".solution-reveal").forEach(root => {
+  const container = root.querySelector(".steps-container");
+  const btn = root.querySelector(".toggle-btn");
+  const finalBox = root.querySelector(".final-box");
+  const steps = root.querySelectorAll(".step");
 
-    if (!(root instanceof HTMLElement) ||
-        !(container instanceof HTMLElement) ||
-        !(btn instanceof HTMLButtonElement) ||
-        !(finalBox instanceof HTMLElement)) return;
+  if (!(root instanceof HTMLElement) ||
+      !(container instanceof HTMLElement) ||
+      !(btn instanceof HTMLButtonElement) ||
+      !(finalBox instanceof HTMLElement)) return;
 
-    const intervalMs = Number(root.dataset.interval ?? 600);
+  const intervalMs = Number(root.dataset.interval ?? 600);
+  const showText = root.dataset.showText ?? "";
+  const hideText = root.dataset.hideText ?? "";
 
-    let open = false;
-    let timers: ReturnType<typeof setTimeout>[] = [];
+  let open = false;
+  let timers: number[] = [];
+  let animating = false;
 
-    const reset = () => {
-      steps.forEach(step => {
-        step.classList.add("opacity-0", "translate-y-4");
-        step.classList.remove("opacity-100", "translate-y-0");
-      });
-      finalBox.classList.add("hidden");
-    };
+  const clearTimers = () => {
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+  };
 
-    const revealSteps = () => {
-      steps.forEach((step, i) => {
-        const t = setTimeout(() => {
-          step.classList.remove("opacity-0", "translate-y-4");
-          step.classList.add("opacity-100", "translate-y-0");
+  const reset = () => {
+    clearTimers();
+    animating = false;
 
-          if (i === steps.length - 1) {
-            finalBox.classList.remove("hidden");
-          }
-        }, i * intervalMs);
-
-        timers.push(t);
-      });
-    };
-
-    const clearTimers = () => {
-      timers.forEach(t => clearTimeout(t));
-      timers = [];
-    };
-
-    btn.addEventListener("click", () => {
-      open = !open;
-
-      btn.textContent = open ? "{hideText}" : "{showText}";
-      btn.setAttribute("aria-expanded", String(open));
-
-      clearTimers();
-
-      if (open) {
-        container.classList.remove("hidden");
-        revealSteps();
-      } else {
-        container.classList.add("hidden");
-        reset();
-      }
+    steps.forEach(step => {
+      step.classList.add("opacity-0", "translate-y-4");
+      step.classList.remove("opacity-100", "translate-y-0");
     });
+
+    finalBox.classList.add("hidden", "opacity-0");
+  };
+
+  const revealSteps = () => {
+    animating = true;
+
+    steps.forEach((step, i) => {
+      const t = setTimeout(() => {
+        step.classList.remove("opacity-0", "translate-y-4");
+        step.classList.add("opacity-100", "translate-y-0");
+
+        if (i === steps.length - 1) {
+          finalBox.classList.remove("hidden");
+
+          requestAnimationFrame(() => {
+            finalBox.classList.remove("opacity-0");
+          });
+
+          animating = false;
+        }
+      }, i * intervalMs);
+
+      timers.push(t);
+    });
+  };
+
+  btn.addEventListener("click", () => {
+    // ⚠️ evita glitches si hacen click rápido
+    if (animating) {
+      clearTimers();
+      animating = false;
+    }
+
+    open = !open;
+
+    btn.textContent = open ? hideText : showText;
+    btn.setAttribute("aria-expanded", String(open));
+
+    if (open) {
+      container.classList.remove("hidden");
+
+      // fuerza reflow para animación limpia
+      container.offsetHeight;
+
+      reset();
+      revealSteps();
+    } else {
+      container.classList.add("hidden");
+      reset();
+    }
   });
+});
 </script>
