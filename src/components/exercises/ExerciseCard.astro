@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  difficulty: string;
+  difficultyColor: string;
+  category: string;
+  link: string;
+}
+
+const {
+  title,
+  difficulty,
+  difficultyColor,
+  category,
+  link
+} = Astro.props;
+
+function getBadgeColor(color: string) {
+  const colors: Record<string, string> = {
+    yellow: "badge-yellow",
+    gray: "badge-gray",
+    red: "badge-red",
+    green: "badge-green"
+  };
+
+  return colors[color];
+}
+---
+
+<a
+  href={link}
+  class="exercise-card group"
+  data-difficulty={difficulty}
+  data-category={category}
+  data-title={title}
+>
+
+  <h2 class="card-title">
+    {title}
+  </h2>
+
+  <div class="card-tags">
+    <span class="badge badge-yellow">
+      {category}
+    </span>
+
+    <span class={`badge ${getBadgeColor(difficultyColor)}`}>
+      {difficulty}
+    </span>
+  </div>
+
+</a>

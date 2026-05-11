@@ -2,6 +2,10 @@
 @import "tailwindcss";
 
 @layer base {
+    :root {
+        --font-heading: "Space Mono", monospace;
+        --font-body: "Lato", sans-serif;
+    }
 
     html {
         scroll-behavior: smooth;
@@ -18,17 +22,6 @@
     h5,
     h6 {
         font-family: var(--font-heading);
-    }
-}
-
-@layer base {
-    :root {
-        --primary: 221 38% 20%;
-
-        --font-heading: "Space Mono", monospace;
-        --font-body: "Lato", sans-serif;
-
-        --transparentContainer: rgb(0, 0, 0, 0.1)
     }
 }
 
@@ -70,7 +63,6 @@
 
     .math-symbol {
         font-family: var(--font-heading);
-        color: hsl(var(--yellow-glow) / 0.12);
         position: absolute;
         font-size: 3rem;
         user-select: none;

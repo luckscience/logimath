@@ -1,193 +1,213 @@
-type Difficulty = "Principiante" | "Intermedio" | "Avanzado";
-type DifficultyColor = "yellow" | "gray" | "red" | "green";
+let controller: AbortController;
 
-interface Exercise {
-  title: string;
-  difficulty: Difficulty;
-  difficultyColor: DifficultyColor;
-  category: string;
-  link: string;
-}
+// =========================
+// ESTADO GLOBAL
+// =========================
+let currentFilter = "all";
+let searchTerm = "";
 
-const exercises: Exercise[] = [
-  {
-    title: "El puente y la antorcha",
-    difficulty: "Intermedio",
-    difficultyColor: "gray",
-    category: "Optimización",
-    link: "/exercises/example"
-  },
-  {
-    title: "Juan y las manzanas",
-    difficulty: "Avanzado",
-    difficultyColor: "red",
-    category: "Retroceso",
-    link: "/exercises/exercise-juan-and-apples"
-  },
-  {
-    title: "Example 3",
-    difficulty: "Principiante",
-    difficultyColor: "green",
-    category: "Optimización",
-    link: "/exercises/example3"
-  },
-  {
-    title: "Example 4",
-    difficulty: "Avanzado",
-    difficultyColor: "red",
-    category: "Optimización",
-    link: "/exercises/example4"
-  },
-  {
-    title: "Example 5",
-    difficulty: "Principiante",
-    difficultyColor: "green",
-    category: "Optimización",
-    link: "/exercises/example5"
-  },
-  {
-    title: "Example 6",
-    difficulty: "Intermedio",
-    difficultyColor: "gray",
-    category: "Optimización",
-    link: "/exercises/example6"
-  }
-];
+// =========================
+// INIT
+// =========================
+function initExercises(): void {
 
-// ✅ Tipado correcto del DOM
-const container = document.getElementById("cards-container") as HTMLDivElement | null;
-const searchInput = document.getElementById("search-input") as HTMLInputElement | null;
-const filterButtons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+  // limpiar listeners viejos
+  controller?.abort();
 
-if (!container) {
-  throw new Error("No se encontró #cards-container");
-}
+  controller = new AbortController();
 
-let currentFilter: string = "all";
-let searchTerm: string = "";
+  const signal = controller.signal;
 
-// ✅ FIX 1: tipar correctamente el parámetro
-function getBadgeColor(color: DifficultyColor): string {
-  const colors: Record<DifficultyColor, string> = {
-    yellow: "badge-yellow",
-    gray: "badge-gray",
-    red: "badge-red",
-    green: "badge-green"
-  };
+  // elementos
+  const cards =
+    document.querySelectorAll<HTMLElement>(".exercise-card");
 
-  return colors[color];
-}
+  const searchInput =
+    document.getElementById("search-input") as HTMLInputElement | null;
 
-// 🔗 URL
-function updateURL(): void {
-  const params = new URLSearchParams();
+  const filterButtons =
+    document.querySelectorAll<HTMLButtonElement>(".filter-btn");
 
-  if (currentFilter !== "all") {
-    params.set("difficulty", currentFilter);
-  }
+  // =========================
+  // ACTUALIZAR URL
+  // =========================
+  function updateURL(): void {
 
-  if (searchTerm) {
-    params.set("search", searchTerm);
-  }
+    const params = new URLSearchParams();
 
-  const newUrl = `${window.location.pathname}?${params.toString()}`;
-  window.history.replaceState({}, "", newUrl);
-}
-
-// 📥 cargar URL
-function loadFromURL(): void {
-  if (!searchInput) return;
-
-  const params = new URLSearchParams(window.location.search);
-
-  const difficulty = params.get("difficulty");
-  const search = params.get("search");
-
-  if (difficulty) currentFilter = difficulty;
-
-  if (search) {
-    searchTerm = search.toLowerCase();
-    searchInput.value = search; // ✅ FIX 2 (ya tipado correctamente)
-  }
-
-  filterButtons.forEach(btn => {
-    btn.classList.remove("active");
-
-    // ✅ FIX 3 dataset tipado correctamente
-    if (btn.dataset.filter === currentFilter) {
-      btn.classList.add("active");
+    if (currentFilter !== "all") {
+      params.set("difficulty", currentFilter);
     }
-  });
-}
 
-// 🧩 render
-function renderCards(): void {
-  if (!container) return;
+    if (searchTerm) {
+      params.set("search", searchTerm);
+    }
 
-  container.innerHTML = "";
+    const query = params.toString();
 
-  const filtered = exercises.filter(ex => {
-    const matchesSearch =
-      ex.title.toLowerCase().includes(searchTerm) ||
-      ex.category.toLowerCase().includes(searchTerm);
+    const newUrl =
+      query.length > 0
+        ? `${window.location.pathname}?${query}`
+        : window.location.pathname;
 
-    const matchesFilter =
-      currentFilter === "all" || ex.difficulty === currentFilter;
-
-    return matchesSearch && matchesFilter;
-  });
-
-  if (filtered.length === 0) {
-    container.innerHTML = `<p class="text-gray-400 col-span-full">No se encontraron ejercicios</p>`;
-    return;
+    window.history.replaceState(
+      {},
+      "",
+      newUrl
+    );
   }
 
-  filtered.forEach(ex => {
-    const card = document.createElement("div");
-    card.className = "exercise-card group";
-    card.onclick = () => window.location.href = ex.link;
+  // =========================
+  // CARGAR ESTADO DESDE URL
+  // =========================
+  function loadFromURL(): void {
 
-    card.innerHTML = `
-      <h2 class="card-title">${ex.title}</h2>
-      <div class="card-tags">
-        <span class="badge badge-yellow">${ex.category}</span>
-        <span class="badge ${getBadgeColor(ex.difficultyColor)}">
-          ${ex.difficulty}
-        </span>
-      </div>
-    `;
+    const params =
+      new URLSearchParams(window.location.search);
 
-    container.appendChild(card);
+    const difficulty =
+      params.get("difficulty");
+
+    const search =
+      params.get("search");
+
+    if (difficulty) {
+      currentFilter = difficulty;
+    }
+
+    if (search) {
+
+      searchTerm = search.toLowerCase();
+
+      if (searchInput) {
+        searchInput.value = search;
+      }
+    }
+
+    // restaurar botón activo
+    filterButtons.forEach(btn => {
+
+      btn.classList.remove("active");
+
+      if (
+        btn.dataset.filter === currentFilter
+      ) {
+        btn.classList.add("active");
+      }
+    });
+  }
+
+  // =========================
+  // FILTRAR CARDS
+  // =========================
+  function filterCards(): void {
+
+    let visibleCards = 0;
+
+    cards.forEach(card => {
+
+      const title =
+        card.dataset.title?.toLowerCase() ?? "";
+
+      const category =
+        card.dataset.category?.toLowerCase() ?? "";
+
+      const difficulty =
+        card.dataset.difficulty ?? "";
+
+      const matchesSearch =
+        title.includes(searchTerm) ||
+        category.includes(searchTerm);
+
+      const matchesFilter =
+        currentFilter === "all" ||
+        difficulty === currentFilter;
+
+      const shouldShow =
+        matchesSearch && matchesFilter;
+
+      card.classList.toggle(
+        "hidden-card",
+        !shouldShow
+      );
+
+      if (shouldShow) {
+        visibleCards++;
+      }
+    });
+
+    updateURL();
+
+    console.log(
+      `Cards visibles: ${visibleCards}`
+    );
+  }
+
+  // =========================
+  // BUSCADOR
+  // =========================
+  searchInput?.addEventListener(
+    "input",
+    (e: Event) => {
+
+      const target =
+        e.target as HTMLInputElement;
+
+      searchTerm =
+        target.value.toLowerCase();
+
+      filterCards();
+    },
+    { signal }
+  );
+
+  // =========================
+  // FILTROS
+  // =========================
+  filterButtons.forEach(btn => {
+
+    btn.addEventListener(
+      "click",
+      () => {
+
+        currentFilter =
+          btn.dataset.filter ?? "all";
+
+        // remover active
+        filterButtons.forEach(b =>
+          b.classList.remove("active")
+        );
+
+        // agregar active
+        btn.classList.add("active");
+
+        filterCards();
+      },
+      { signal }
+    );
   });
 
-  updateURL();
+  // =========================
+  // CARGA INICIAL
+  // =========================
+  loadFromURL();
+
+  filterCards();
+
+  console.log(
+    "Exercises initialized"
+  );
 }
 
-// 🔍 buscador
-if (searchInput) {
-  searchInput.addEventListener("input", (e: Event) => {
-    const target = e.target as HTMLInputElement | null; // ✅ FIX 4
+// =========================
+// ASTRO CLIENT ROUTER
+// =========================
+document.addEventListener(
+  "astro:page-load",
+  initExercises
+);
 
-    if (!target) return;
-
-    searchTerm = target.value.toLowerCase();
-    renderCards();
-  });
-}
-
-// 🎯 filtros
-filterButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    // ✅ FIX 5 dataset seguro
-    currentFilter = btn.dataset.filter ?? "all";
-
-    filterButtons.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    renderCards();
-  });
-});
-
-// 🚀 init
-loadFromURL();
-renderCards();
+// =========================
+// PRIMER LOAD
+// =========================
+initExercises();
