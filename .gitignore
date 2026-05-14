@@ -24,4 +24,5 @@ pnpm-debug.log*
 .idea/
 .vercel
 
-/src/generated/prisma
+pnpm-workspace.yaml
+desktop.ini

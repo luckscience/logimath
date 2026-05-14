@@ -3,13 +3,6 @@ import Layout from "../../layouts/Layout.astro";
 import Header from "../../layouts/Header.astro";
 import Footer from "../../layouts/Footer.astro";
 
-const segments = [
-  {
-    text: "Inicio",
-    route: "/#home",
-  },
-];
-
 const user = {
   name: "Juan Pérez",
   username: "@juandev",
@@ -24,7 +17,7 @@ const user = {
 
 <Layout>
   <div class="min-h-screen flex flex-col bg-[#070F33] grid-pattern">
-    <Header segments={segments} />
+    <Header />
 
     <main class="flex-1 w-full overflow-x-hidden scroll-custom select-none">
       <div class="max-w-371.25 mx-auto px-5 pt-28 pb-16">
