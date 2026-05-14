@@ -29,7 +29,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   if (isAuthRoute && user) {
-    return context.redirect("/user/profile");
+    return context.redirect("/profile");
   }
 
   return next();

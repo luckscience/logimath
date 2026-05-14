@@ -4,8 +4,7 @@ const logoutBtn = document.getElementById("logout-btn");
 
 if (logoutBtn instanceof HTMLButtonElement) {
   logoutBtn.addEventListener("click", async () => {
-    await supabase.auth.signOut();
-
+    await fetch("/api/logout", { method: "POST" });
     window.location.href = "/";
   });
 }
