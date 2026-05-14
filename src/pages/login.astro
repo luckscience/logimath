@@ -21,18 +21,22 @@ import MathSymbols from "../components/MathSymbols.astro";
           <MathSymbols />
         </div>
 
-        <div class="relative z-20 w-full flex items-center justify-center">
+        <div
+          class="relative z-20 w-full flex items-center justify-center mt-20"
+        >
           <form
+            id="login-form"
             class="w-105 p-13 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_0_30px_20px_rgba(0,0,0,0.1)] text-white flex flex-col items-center"
           >
             <h1 class="mb-4 text-2xl font-semibold">Iniciar Sesión</h1>
 
-            <!-- Username -->
+            <!-- Email -->
             <div class="w-full relative mt-5">
               <input
-                type="text"
-                name="username"
-                placeholder="Nombre de usuario"
+                type="email"
+                name="email"
+                placeholder="Correo electrónico"
+                required
                 class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
               />
               <i
@@ -45,6 +49,7 @@ import MathSymbols from "../components/MathSymbols.astro";
               <input
                 type="password"
                 name="password"
+                required
                 placeholder="Contraseña"
                 class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
               />
@@ -66,6 +71,26 @@ import MathSymbols from "../components/MathSymbols.astro";
               </div>
 
               <a href="#" class="hover:underline">Forgot password</a>
+            </div>
+
+            <div class="w-full flex justify-center mt-4">
+              <div
+                class="flex-col text-center items-center text-gray-foreground"
+              >
+                <div class="flex-row font-bold">
+                  <span>----------------------</span>
+                  <span class="mx-2">o</span>
+                  <span>----------------------</span>
+                </div>
+                <button
+                  type="button"
+                  id="google-login"
+                  class="w-full mt-4 py-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300"
+                >
+                  <i class="fa-brands fa-google mr-1"></i>
+                  Continuar con Google
+                </button>
+              </div>
             </div>
 
             <!-- Button -->
@@ -91,3 +116,5 @@ import MathSymbols from "../components/MathSymbols.astro";
     <Footer />
   </div>
 </Layout>
+
+<script src="../scripts/login.ts"></script>

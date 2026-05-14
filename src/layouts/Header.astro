@@ -9,6 +9,7 @@ const navItems = [
 ];
 
 const currentPath = Astro.url.pathname;
+const user = Astro.locals.user;
 ---
 
 <header
@@ -68,16 +69,27 @@ const currentPath = Astro.url.pathname;
 
   <!-- DERECHA -->
   <div class="flex justify-end basis-0 grow mr-20">
-    <div
-      class="rounded-2xl p-2 border-transparent hover:border hover:border-gray-400/20 transition-all duration-300"
-    >
-      <a href="/login"
-        ><i class="fa-solid fa-user p-2 text-white bg-[#171f40] rounded-2xl"
-        ></i></a
+  {
+    !user ? (
+      <div
+        class="rounded-2xl p-2 border-transparent hover:border hover:border-gray-400/20 transition-all duration-300"
       >
-      <a href="/login" class="px-3 py-2 text-white font-bold">
-        Iniciar sesión
-      </a>
-    </div>
-  </div>
+        <a href="/login">
+          <i class="fa-solid fa-user p-2 text-white bg-[#171f40] rounded-2xl"></i>
+        </a>
+
+        <a href="/login" class="px-3 py-2 text-white font-bold">
+          Iniciar sesión
+        </a>
+      </div>
+    ) : (
+      <div class="flex items-center gap-3">
+
+        <a href="user/profile" class="text-[#F4E13A] font-bold">
+          Perfil
+        </a>
+      </div>
+    )
+  }
+</div>
 </header>

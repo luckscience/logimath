@@ -25,6 +25,7 @@ import MathSymbols from "../components/MathSymbols.astro";
           class="relative z-20 mt-20 w-full flex items-center justify-center"
         >
           <form
+            id="register-form"
             class="w-105 p-13 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_0_30px_20px_rgba(0,0,0,0.1)] text-white flex flex-col items-center"
           >
             <h1 class="mb-4 text-2xl font-semibold">Registrarse</h1>
@@ -35,6 +36,7 @@ import MathSymbols from "../components/MathSymbols.astro";
                 type="text"
                 name="username"
                 placeholder="Nombre de usuario"
+                required
                 class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
               />
               <i
@@ -48,6 +50,7 @@ import MathSymbols from "../components/MathSymbols.astro";
                 type="email"
                 name="email"
                 placeholder="Correo electronico"
+                required
                 class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
               />
             </div>
@@ -58,6 +61,7 @@ import MathSymbols from "../components/MathSymbols.astro";
                 type="password"
                 name="password"
                 placeholder="Contraseña"
+                required
                 class="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border-2 border-transparent text-white placeholder-white/70 outline-none focus:border-white/25 caret-white font-medium transition-all duration-300"
               />
               <i
@@ -102,3 +106,5 @@ import MathSymbols from "../components/MathSymbols.astro";
     <Footer />
   </div>
 </Layout>
+
+<script src="../scripts/register.ts"></script>
