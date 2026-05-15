@@ -1,5 +1,3 @@
-import { supabase } from "../lib/supabase";
-
 const form = document.getElementById("register-form");
 
 if (!(form instanceof HTMLFormElement)) {
@@ -10,28 +8,22 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(form);
-
   const email = String(formData.get("email") || "");
   const password = String(formData.get("password") || "");
-
   const username = String(formData.get("username") || "");
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        username,
-      },
-    },
+  const res = await fetch("/api/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, username }),
   });
 
-  if (error) {
-    alert(error.message);
+  if (!res.ok) {
+    const { error } = await res.json();
+    alert(error);
     return;
   }
 
   alert("Cuenta creada correctamente");
-
   window.location.href = "/login";
 });
